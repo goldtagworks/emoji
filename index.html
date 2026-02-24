@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>문서용 안전 심볼 표 (CSS-only)</title>
+  <style>
+    :root{
+      --bg:#f8fafc; --panel:#fff; --panel2:#f1f5f9; --text:#0f172a; --muted:#475569;
+      --border:#cbd5e1; --shadow:0 10px 30px rgba(2,6,23,.08);
+      --accent:#0f172a; --accentText:#fff; --chip:#e2e8f0; --chipText:#0f172a;
+      --code:#0b1220; --codeText:#e2e8f0; --ring:rgba(15,23,42,.18);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0b1220; --panel:#0f172a; --panel2:#111c33; --text:#e2e8f0; --muted:#94a3b8;
+        --border:#22314d; --shadow:0 10px 30px rgba(0,0,0,.35);
+        --accent:#e2e8f0; --accentText:#0b1220; --chip:#1e293b; --chipText:#e2e8f0;
+        --code:#0b1220; --codeText:#e2e8f0; --ring:rgba(226,232,240,.16);
+      }
+    }
+    html[data-theme="light"]{ /* override light */
+      --bg:#f8fafc; --panel:#fff; --panel2:#f1f5f9; --text:#0f172a; --muted:#475569;
+      --border:#cbd5e1; --shadow:0 10px 30px rgba(2,6,23,.08);
+      --accent:#0f172a; --accentText:#fff; --chip:#e2e8f0; --chipText:#0f172a;
+      --code:#0b1220; --codeText:#e2e8f0; --ring:rgba(15,23,42,.18);
+    }
+    html[data-theme="dark"]{ /* override dark */
+      --bg:#0b1220; --panel:#0f172a; --panel2:#111c33; --text:#e2e8f0; --muted:#94a3b8;
+      --border:#22314d; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --accent:#e2e8f0; --accentText:#0b1220; --chip:#1e293b; --chipText:#e2e8f0;
+      --code:#0b1220; --codeText:#e2e8f0; --ring:rgba(226,232,240,.16);
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .container{ max-width:1100px; margin:0 auto; padding:18px 16px 32px; }
+
+    header{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--panel) 78%, transparent);
+      border-bottom:1px solid var(--border);
+    }
+    .header-inner{ max-width:1100px; margin:0 auto; padding:14px 16px; display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+    .title{ display:flex; flex-direction:column; gap:4px; }
+    h1{ font-size:18px; margin:0; }
+    .sub{ font-size:13px; color:var(--muted); }
+
+    .controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .input, select{
+      height:36px; border:1px solid var(--border); background:var(--panel); color:var(--text);
+      border-radius:10px; padding:0 12px; outline:none;
+      box-shadow:0 0 0 0 var(--ring);
+      transition: box-shadow .15s, border-color .15s;
+      font-size:13px;
+    }
+    .input:focus, select:focus{
+      border-color: color-mix(in srgb, var(--border) 30%, var(--text));
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+    .input{ width:320px; }
+    .btn{
+      height:36px; border-radius:10px; border:1px solid var(--border);
+      background:var(--panel); color:var(--text); padding:0 12px; font-size:13px;
+      cursor:pointer; transition: transform .05s, background .15s, border-color .15s; user-select:none;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: var(--accent); color: var(--accentText);
+      border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+    }
+    .btn.icon{ width:36px; padding:0; display:grid; place-items:center; }
+    .btn.chip{
+      height:32px; border-radius:999px; background:var(--chip); color:var(--chipText);
+      border:1px solid var(--border); font-size:12px;
+    }
+    .btn.chip:hover{ filter: brightness(0.98); }
+
+    .panel{
+      background:var(--panel); border:1px solid var(--border); border-radius:18px;
+      box-shadow: var(--shadow); padding:14px; margin-top:16px;
+    }
+    .row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:space-between; }
+    .hint{ font-size:12px; color:var(--muted); }
+    .kbd{
+      font-family: ui-monospace, monospace; font-size:11px;
+      background:var(--chip); color:var(--chipText); border:1px solid var(--border);
+      border-bottom-width:2px; border-radius:8px; padding:2px 6px; margin-left:6px;
+    }
+
+    .combos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .combos .btn{ white-space:nowrap; }
+
+    .grid{
+      display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top:14px;
+    }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns:1fr; }
+      .input{ width:100%; }
+      .controls{ width:100%; justify-content:stretch; }
+      select, .btn{ flex:1; }
+    }
+
+    .card{
+      background:var(--panel); border:1px solid var(--border); border-radius:18px;
+      overflow:hidden; box-shadow: var(--shadow);
+    }
+    .card-head{
+      padding:12px; display:flex; justify-content:space-between; align-items:center;
+      border-bottom:1px solid var(--border);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel2) 55%, transparent), var(--panel));
+    }
+    .card-title{ font-size:13px; font-weight:700; }
+    .count{ font-size:12px; color:var(--muted); }
+    .items{
+      padding:10px;
+      display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px;
+    }
+    @media (max-width: 520px){ .items{ grid-template-columns:1fr; } }
+
+    .item{
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 84%, var(--panel2));
+      border-radius:14px; padding:10px;
+      display:flex; gap:10px; align-items:center;
+      cursor:pointer; transition: transform .05s, border-color .15s, background .15s;
+      user-select:none;
+    }
+    .item:hover{
+      border-color: color-mix(in srgb, var(--border) 30%, var(--text));
+      background: color-mix(in srgb, var(--panel) 70%, var(--panel2));
+    }
+    .item:active{ transform: translateY(1px); }
+    .sym{
+      width:44px; height:44px; display:grid; place-items:center;
+      border-radius:12px; background:var(--panel); border:1px solid var(--border);
+      font-size:22px; flex:0 0 auto;
+    }
+    .meta{ min-width:0; display:flex; flex-direction:column; gap:3px; }
+    .name{ font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .desc{ font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px; background:var(--code); color:var(--codeText);
+      border-radius:10px; padding:3px 8px; margin-left:auto;
+      border:1px solid color-mix(in srgb, var(--border) 40%, transparent); flex:0 0 auto;
+    }
+
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background:var(--accent); color:var(--accentText);
+      padding:10px 14px; border-radius:999px;
+      box-shadow: var(--shadow);
+      border:1px solid color-mix(in srgb, var(--border) 20%, transparent);
+      font-size:13px; display:none; max-width:calc(100% - 24px);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="header-inner">
+    <div class="title">
+      <h1>문서용 안전 심볼 표</h1>
+      <div class="sub">클릭 복사 · 검색/필터 · “자주 쓰는 조합” · Notion/Confluence 미니멀 프리셋</div>
+    </div>
+
+    <div class="controls">
+      <select id="preset">
+        <option value="full">Preset: Full</option>
+        <option value="notion">Preset: Notion/Confluence (Minimal)</option>
+      </select>
+      <input id="q" class="input" type="search" placeholder="검색: arrow, check, tree, box, warn, math" />
+      <select id="cat"><option value="all">전체</option></select>
+      <button id="copyAll" class="btn primary">현재 목록 복사</button>
+      <button id="themeBtn" class="btn icon" title="테마 전환">🌙</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="panel">
+    <div class="row">
+      <div class="hint">
+        <b>Enter</b> = 첫 항목 복사 · <b>Ctrl/⌘ + K</b> = 검색 포커스
+      </div>
+      <div class="hint">
+        Preset은 <b>표/위키</b> 문서 기준으로 조정됨
+      </div>
+    </div>
+
+    <div style="margin-top:10px;">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-size:13px; font-weight:700;">자주 쓰는 조합 (클릭하면 그대로 복사)</div>
+        <div class="hint">문장/표/README에 바로 붙여넣기</div>
+      </div>
+      <div id="comboBar" class="combos"></div>
+    </div>
+  </section>
+
+  <div id="grid" class="grid"></div>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  const DATA_FULL = [
+    {
+      category: "Arrows (흐름/전환)",
+      items: [
+        { s:"→", name:"Right arrow", desc:"기본 흐름", keys:"arrow right flow" },
+        { s:"←", name:"Left arrow", desc:"역방향", keys:"arrow left back" },
+        { s:"↑", name:"Up arrow", desc:"상승/위", keys:"arrow up" },
+        { s:"↓", name:"Down arrow", desc:"하강/아래", keys:"arrow down" },
+        { s:"↔", name:"Both ways", desc:"양방향", keys:"arrow both" },
+        { s:"↩", name:"Return", desc:"되돌림/리턴", keys:"arrow return" },
+        { s:"↪", name:"Reference", desc:"이어짐/참조", keys:"arrow reference" },
+        { s:"⇒", name:"Implies", desc:"결론/함의", keys:"implies double arrow" },
+      ]
+    },
+    {
+      category: "Status (체크/상태)",
+      items: [
+        { s:"✓", name:"Check", desc:"완료/확인", keys:"check ok done" },
+        { s:"✗", name:"Cross", desc:"실패/불가", keys:"cross fail no" },
+        { s:"•", name:"Bullet", desc:"기본 목록", keys:"bullet list" },
+        { s:"◦", name:"Hollow bullet", desc:"하위 목록", keys:"bullet hollow sub" },
+        { s:"○", name:"Empty circle", desc:"미완/대기", keys:"circle empty pending" },
+        { s:"●", name:"Filled circle", desc:"강조/활성", keys:"circle filled active" },
+        { s:"※", name:"Note mark", desc:"주석/참고", keys:"note reference mark" },
+      ]
+    },
+    {
+      category: "Warnings (경고/주의)",
+      items: [
+        { s:"!", name:"Exclamation", desc:"경고(가벼움)", keys:"warn exclamation" },
+        { s:"‼", name:"Double exclamation", desc:"경고(강함)", keys:"warn strong" },
+        { s:"?", name:"Question", desc:"확인 필요", keys:"question todo" },
+        { s:"⚠", name:"Warning sign", desc:"주의(환경별 약간 차이)", keys:"warning sign" },
+        { s:"☐", name:"Empty box", desc:"체크박스(빈칸)", keys:"checkbox empty" },
+        { s:"☑", name:"Box check", desc:"체크박스(체크)", keys:"checkbox check" },
+      ]
+    },
+    {
+      category: "Structure (트리/구조)",
+      items: [
+        { s:"├", name:"Tree mid", desc:"트리 중간", keys:"tree branch" },
+        { s:"└", name:"Tree end", desc:"트리 끝", keys:"tree end" },
+        { s:"│", name:"Tree pipe", desc:"세로 연결", keys:"tree pipe" },
+        { s:"─", name:"Line", desc:"구분선", keys:"divider line" },
+        { s:"—", name:"Em dash", desc:"문장 구분", keys:"dash em" },
+        { s:"–", name:"En dash", desc:"범위 표시", keys:"dash en range" },
+      ]
+    },
+    {
+      category: "Math/Logic (수학/논리)",
+      items: [
+        { s:"≠", name:"Not equal", desc:"같지 않음", keys:"not equal" },
+        { s:"≤", name:"Less or equal", desc:"이하", keys:"lte" },
+        { s:"≥", name:"Greater or equal", desc:"이상", keys:"gte" },
+        { s:"±", name:"Plus/minus", desc:"오차", keys:"plus minus" },
+        { s:"∞", name:"Infinity", desc:"무한", keys:"infinity" },
+      ]
+    },
+  ];
+
+  // Notion/Confluence: "가장 자주 쓰고, 가장 안정적인" 최소 세트
+  const DATA_NOTION = [
+    {
+      category: "Core (문서 필수)",
+      items: [
+        { s:"→", name:"Right arrow", desc:"흐름", keys:"arrow flow" },
+        { s:"⇒", name:"Implies", desc:"결론", keys:"implies" },
+        { s:"✓", name:"Check", desc:"완료", keys:"done check" },
+        { s:"✗", name:"Cross", desc:"실패", keys:"fail cross" },
+        { s:"•", name:"Bullet", desc:"목록", keys:"list bullet" },
+        { s:"◦", name:"Sub bullet", desc:"하위 목록", keys:"sub bullet" },
+        { s:"※", name:"Note", desc:"참고", keys:"note" },
+        { s:"!", name:"Warn", desc:"주의(텍스트)", keys:"warn" },
+      ]
+    },
+    {
+      category: "Structure (구조)",
+      items: [
+        { s:"├", name:"Tree mid", desc:"트리", keys:"tree" },
+        { s:"└", name:"Tree end", desc:"트리 끝", keys:"tree end" },
+        { s:"│", name:"Tree pipe", desc:"연결", keys:"pipe" },
+        { s:"─", name:"Line", desc:"구분선", keys:"divider" },
+      ]
+    }
+  ];
+
+  const COMBOS_FULL = [
+    { label: "Input → Process → Output", text: "Input → Process → Output" },
+    { label: "Build → Test → Deploy", text: "Build → Test → Deploy" },
+    { label: "✓ Done / ✗ Fail / ! Warn", text: "✓ Done / ✗ Fail / ! Warn" },
+    { label: "✓ OK / ? Check / ! Risk", text: "✓ OK / ? Check / ! Risk" },
+    { label: "A ⇒ B (결론)", text: "A ⇒ B" },
+    { label: "Assignee → Owner", text: "Assignee → Owner" },
+    { label: "Spec → Implement → Review", text: "Spec → Implement → Review" },
+    { label: "• Main / ◦ Sub", text: "• Main\n  ◦ Sub" },
+  ];
+
+  const COMBOS_NOTION = [
+    { label: "Input → Process → Output", text: "Input → Process → Output" },
+    { label: "✓ Done / ✗ Fail / ! Warn", text: "✓ Done / ✗ Fail / ! Warn" },
+    { label: "• Main / ◦ Sub", text: "• Main\n  ◦ Sub" },
+    { label: "Tree snippet", text:
+`project
+├─ src
+│  ├─ components
+│  └─ utils
+└─ package.json` },
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const grid = $("grid");
+  const q = $("q");
+  const cat = $("cat");
+  const toast = $("toast");
+  const copyAllBtn = $("copyAll");
+  const themeBtn = $("themeBtn");
+  const presetSel = $("preset");
+  const comboBar = $("comboBar");
+
+  const THEME_KEY = "sym_theme";
+  const PRESET_KEY = "sym_preset";
+
+  function applyThemeLabel(){
+    const t = document.documentElement.getAttribute("data-theme");
+    if (t === "dark") themeBtn.textContent = "☀️";
+    else if (t === "light") themeBtn.textContent = "🌙";
+    else {
+      const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      themeBtn.textContent = isDark ? "☀️" : "🌙";
+    }
+  }
+  function loadTheme(){
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "dark" || saved === "light") document.documentElement.setAttribute("data-theme", saved);
+    else document.documentElement.removeAttribute("data-theme");
+    applyThemeLabel();
+  }
+  function toggleTheme(){
+    const cur = document.documentElement.getAttribute("data-theme");
+    if (cur === "dark") { document.documentElement.setAttribute("data-theme","light"); localStorage.setItem(THEME_KEY,"light"); }
+    else if (cur === "light") { document.documentElement.removeAttribute("data-theme"); localStorage.removeItem(THEME_KEY); }
+    else { document.documentElement.setAttribute("data-theme","dark"); localStorage.setItem(THEME_KEY,"dark"); }
+    applyThemeLabel();
+    showToast("Theme: " + (document.documentElement.getAttribute("data-theme") || "system"));
+  }
+  themeBtn.addEventListener("click", toggleTheme);
+  if (window.matchMedia) {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => {
+      if (!document.documentElement.getAttribute("data-theme")) applyThemeLabel();
+    });
+  }
+
+  function normalize(s){ return (s || "").toLowerCase().trim(); }
+
+  function getData(){
+    return presetSel.value === "notion" ? DATA_NOTION : DATA_FULL;
+  }
+  function getCombos(){
+    return presetSel.value === "notion" ? COMBOS_NOTION : COMBOS_FULL;
+  }
+
+  function rebuildCategories(){
+    const data = getData();
+    cat.innerHTML = "";
+    const all = document.createElement("option");
+    all.value = "all"; all.textContent = "전체";
+    cat.appendChild(all);
+
+    for (const g of data){
+      const opt = document.createElement("option");
+      opt.value = g.category;
+      opt.textContent = g.category;
+      cat.appendChild(opt);
+    }
+  }
+
+  function filtered(){
+    const data = getData();
+    const query = normalize(q.value);
+    const chosen = cat.value;
+    const blocks = [];
+
+    for (const group of data){
+      if (chosen !== "all" && group.category !== chosen) continue;
+      const items = group.items.filter(it => {
+        if (!query) return true;
+        const hay = normalize(it.s + " " + it.name + " " + it.desc + " " + it.keys);
+        return hay.includes(query);
+      });
+      if (items.length) blocks.push({ category: group.category, items });
+    }
+    return blocks;
+  }
+
+  function escapeHtml(str){
+    return str.replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[m]));
+  }
+
+  function renderCombos(){
+    comboBar.innerHTML = "";
+    for (const c of getCombos()){
+      const b = document.createElement("button");
+      b.className = "btn chip";
+      b.textContent = c.label;
+      b.addEventListener("click", () => copyCombo(c.text, c.label));
+      comboBar.appendChild(b);
+    }
+  }
+
+  function render(){
+    grid.innerHTML = "";
+    const blocks = filtered();
+
+    if (!blocks.length){
+      const empty = document.createElement("div");
+      empty.className = "panel";
+      empty.innerHTML = "<b>결과 없음</b><div class='sub' style='margin-top:6px;'>다른 검색어를 시도해봐. 예: arrow, check, tree, box</div>";
+      grid.appendChild(empty);
+      return;
+    }
+
+    for (const group of blocks){
+      const card = document.createElement("section");
+      card.className = "card";
+
+      const head = document.createElement("div");
+      head.className = "card-head";
+      head.innerHTML = `<div class="card-title">${escapeHtml(group.category)}</div>
+                        <div class="count">${group.items.length} items</div>`;
+      card.appendChild(head);
+
+      const items = document.createElement("div");
+      items.className = "items";
+
+      for (const it of group.items){
+        const el = document.createElement("div");
+        el.className = "item";
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("role", "button");
+        el.setAttribute("data-symbol", it.s);
+        el.setAttribute("data-name", it.name);
+
+        el.innerHTML = `
+          <div class="sym">${escapeHtml(it.s)}</div>
+          <div class="meta">
+            <div class="name">${escapeHtml(it.desc)} <span style="font-weight:600; color:var(--muted);">(${escapeHtml(it.name)})</span></div>
+            <div class="desc">${escapeHtml(it.keys)}</div>
+          </div>
+          <div class="code">${escapeHtml(it.s)}</div>
+        `;
+
+        el.addEventListener("click", () => copySymbol(it.s, it.desc));
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); copySymbol(it.s, it.desc); }
+        });
+
+        items.appendChild(el);
+      }
+
+      card.appendChild(items);
+      grid.appendChild(card);
+    }
+  }
+
+  function showToast(text){
+    toast.textContent = text;
+    toast.style.display = "block";
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.style.display = "none", 1400);
+  }
+
+  async function copyText(text){
+    try{
+      if (navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    }catch(_){}
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    }catch(_){}
+    return false;
+  }
+
+  async function copySymbol(sym, label){
+    const ok = await copyText(sym);
+    showToast(ok ? `Copied: ${sym} (${label})` : "Copy failed (권한/브라우저 설정 확인)");
+  }
+
+  async function copyCombo(text, label){
+    const ok = await copyText(text);
+    showToast(ok ? `Copied combo: ${label}` : "Copy failed");
+  }
+
+  copyAllBtn.addEventListener("click", async () => {
+    const blocks = filtered();
+    const lines = [];
+    for (const g of blocks){
+      lines.push("[" + g.category + "]");
+      lines.push(g.items.map(x => x.s).join(" "));
+      lines.push("");
+    }
+    const text = lines.join("\n").trim();
+    const ok = await copyText(text);
+    showToast(ok ? "현재 목록을 텍스트로 복사했어" : "Copy failed");
+  });
+
+  // Enter = copy first visible item
+  q.addEventListener("keydown", (e) => {
+    if (e.key === "Enter"){
+      const first = grid.querySelector(".item");
+      if (first){
+        const sym = first.getAttribute("data-symbol");
+        const name = first.getAttribute("data-name");
+        copySymbol(sym, name);
+      }
+    }
+  });
+
+  // Ctrl/Cmd+K focuses search
+  window.addEventListener("keydown", (e) => {
+    const isMac = navigator.platform.toLowerCase().includes("mac");
+    if ((isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === "k"){
+      e.preventDefault();
+      q.focus(); q.select();
+    }
+  });
+
+  function loadPreset(){
+    const saved = localStorage.getItem(PRESET_KEY);
+    if (saved === "full" || saved === "notion") presetSel.value = saved;
+    else presetSel.value = "full";
+  }
+  function savePreset(){
+    localStorage.setItem(PRESET_KEY, presetSel.value);
+  }
+
+  presetSel.addEventListener("change", () => {
+    savePreset();
+    q.value = "";
+    rebuildCategories();
+    renderCombos();
+    render();
+    showToast("Preset: " + presetSel.value);
+  });
+
+  // init
+  loadTheme();
+  loadPreset();
+  rebuildCategories();
+  renderCombos();
+  render();
+</script>
+</body>
+</html>
